@@ -84,7 +84,7 @@ jobs:
     name: Build / test
     environment: test
     runs-on: ubuntu-latest
-    needs: [configuration-management-test,deploy-development]
+    needs: [deploy-development]
     steps:
       - uses: actions/checkout@v3
 
@@ -95,7 +95,7 @@ jobs:
       name: Deploy / test
       environment: test
       runs-on: ubuntu-latest
-      needs: build-test
+      needs: [configuration-management-test,build-test]
       steps:
         - uses: actions/checkout@v3
 
@@ -106,7 +106,7 @@ jobs:
     name: Build / user_acceptance_testing
     environment: user_acceptance_testing
     runs-on: ubuntu-latest
-    needs: [configuration-management-user_acceptance_testing,deploy-test]
+    needs: [deploy-test]
     steps:
       - uses: actions/checkout@v3
 
@@ -117,7 +117,7 @@ jobs:
       name: Deploy / user_acceptance_testing
       environment: user_acceptance_testing
       runs-on: ubuntu-latest
-      needs: build-user_acceptance_testing
+      needs: [configuration-management-user_acceptance_testing,build-user_acceptance_testing]
       steps:
         - uses: actions/checkout@v3
 
@@ -129,7 +129,7 @@ jobs:
     name: Build / production
     environment: production
     runs-on: ubuntu-latest
-    needs: [configuration-management-production,deploy-user_acceptance_testing]
+    needs: [deploy-user_acceptance_testing]
     steps:
       - uses: actions/checkout@v3
 
@@ -140,7 +140,7 @@ jobs:
       name: Deploy / production
       environment: production
       runs-on: ubuntu-latest
-      needs: build-production
+      needs: [configuration-management-production,build-production]
       steps:
         - uses: actions/checkout@v3
 
