@@ -1,135 +1,150 @@
-# This is a basic workflow to help you get started with Actions
-
 name: DevOps Assembly Line
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  Infrastructure-Provisioning:
+    name: Infrastructure Provisioning
+    runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo Hello, world!
+        run: echo using Terraform to create AWS infra
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-  # This workflow contains a single job called "build"
-  build-1:
-    # The type of runner that the job will run on
-    name: branch-1
+  configuration-management-development:
+    name: CM / development
+    environment: development
     runs-on: ubuntu-latest
-    needs: build
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    needs: Infrastructure-Provisioning
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
- # This workflow contains a single job called "build"
-  build-2:
-    # The type of runner that the job will run on
-    name: branch-2
+        run: echo using Ansible for config mgmt
+  configuration-management-test:
+    name: CM / test
+    environment: test
     runs-on: ubuntu-latest
-    needs: build
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    needs: Infrastructure-Provisioning
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-# This workflow contains a single job called "build"
-  build-5:
-    # The type of runner that the job will run on
-    name: branch-4
+        run: echo using Ansible for config mgmt
+  configuration-management-user_acceptance_testing:
+    name: CM / user_acceptance_testing
+    environment: user_acceptance_testing
     runs-on: ubuntu-latest
-    needs: [build-1]
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    needs: Infrastructure-Provisioning
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-# This workflow contains a single job called "build"
-  build-6:
-    # The type of runner that the job will run on
-    name: branch-6
+        run: echo using Ansible for config mgmt
+  configuration-management-production:
+    name: CM / production
+    environment: production
     runs-on: ubuntu-latest
-    needs: [build-2]
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    needs: Infrastructure-Provisioning
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo Hello, world!
+        run: echo using Ansible for config mgmt
+  
+  build-development:
+      name: Build / development
+      environment: development
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project. 
-# This workflow contains a single job called "build"
-  build-7:
-    # The type of runner that the job will run on
-    name: branch-7
+        - name: Run a one-line script
+          run: echo using Ansible for config mgmt
+  deploy-development:
+      name: Deploy / development
+      environment: development
+      runs-on: ubuntu-latest
+      needs: [build-development, configuration-management-development]
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Run a one-line script
+          run: echo using Ansible for config mgmt
+  build-test:
+    name: Build / test
+    environment: test
     runs-on: ubuntu-latest
-    needs: [build-5,build-6]
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    needs: [deploy-development]
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo Hello, world!
+        run: echo using Ansible for config mgmt
+        
+  deploy-test:
+      name: Deploy / test
+      environment: test
+      runs-on: ubuntu-latest
+      needs: [configuration-management-test,build-test]
+      steps:
+        - uses: actions/checkout@v3
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project. 
+        - name: Run a one-line script
+          run: echo using Ansible for config mgmt
+  
+  build-user_acceptance_testing:
+    name: Build / user_acceptance_testing
+    environment: user_acceptance_testing
+    runs-on: ubuntu-latest
+    needs: [deploy-test]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a one-line script
+        run: echo using Ansible for config mgmt
+  
+  deploy-user_acceptance_testing:
+      name: Deploy / user_acceptance_testing
+      environment: user_acceptance_testing
+      runs-on: ubuntu-latest
+      needs: [configuration-management-user_acceptance_testing,build-user_acceptance_testing]
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Run a one-line script
+          run: echo using Ansible for config mgmt
+  
+  
+  build-production:
+    name: Build / production
+    environment: production
+    runs-on: ubuntu-latest
+    needs: [deploy-user_acceptance_testing]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a one-line script
+        run: echo using Ansible for config mgmt
+  
+  deploy-production:
+      name: Deploy / production
+      environment: production
+      runs-on: ubuntu-latest
+      needs: [configuration-management-production,build-production]
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Run a one-line script
+          run: echo using Ansible for config mgmt
+  
+    
