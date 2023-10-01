@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         env: [dev,test,uat,prod]
+        name: Infra
     runs-on: ubuntu-latest
     name: Provisioning ${{ matrix.env }}
     steps:
