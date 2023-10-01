@@ -5,11 +5,11 @@ permissions:
   contents: read
 jobs:
   infrastructure_provisioning:
-    name: Provisioning ${{ matrix.env }}
     strategy:
       matrix:
         env: [dev,test,uat,prod]
     runs-on: ubuntu-latest
+    name: Provisioning ${{ matrix.env }}
     steps:
       - uses: actions/checkout@v3
       - name: Run a one-line script
