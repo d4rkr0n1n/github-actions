@@ -1,0 +1,15 @@
+name: matrix-workflow
+on: 
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  matrix_of_jobs:
+    strategy:
+      matrix:
+        env: [test,dev]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run a one-line script
+        run: echo ${{ matrix.env }}
