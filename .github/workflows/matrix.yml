@@ -4,7 +4,7 @@ on:
 permissions:
   contents: read
 jobs:
-  matrix_of_jobs:
+  infrastructure_provisioning:
     strategy:
       matrix:
         env: [test,dev]
