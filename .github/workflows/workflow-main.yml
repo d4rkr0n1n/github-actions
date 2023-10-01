@@ -1,0 +1,9 @@
+on: 
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reusing_workflow_test:
+    name: "reusing_workflow_test"
+    uses: d4rkr0n1n/github-actions/.github/workflows/workflow-A.yml@main
+
