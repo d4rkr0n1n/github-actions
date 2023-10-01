@@ -5,9 +5,10 @@ permissions:
   contents: read
 jobs:
   infrastructure_provisioning:
+    name: Infrastructure Provisioning
     strategy:
       matrix:
-        env: [test,dev]
+        env: [dev,test,uat,prod]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
