@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         env: [dev,test,uat,prod]
+        name: Provisioning ${{ matrix.env }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
